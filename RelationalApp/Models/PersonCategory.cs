@@ -1,6 +1,6 @@
 ﻿namespace RelationalApp.Models
 {
-    public enum PersonCategory
+    public enum PersonCategory:uint
     {
         INTERNET, PHYSICAL, RETAIL, BULK
     }

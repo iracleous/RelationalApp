@@ -1,4 +1,5 @@
-﻿using RelationalApp.Models;
+﻿using RelationalApp.Data;
+using RelationalApp.Models;
 using System;
 
 namespace RelationalApp.Services
@@ -6,52 +7,36 @@ namespace RelationalApp.Services
     public class PersonService : IPersoneService
     {
 
-        private static readonly List<Person> _people =  [
-               new Person()
-               {
-                   Id = 20,
-                   Name = "Test",
-                   Category = PersonCategory.PHYSICAL,
-                   IsAdmin = false,
-                   RegistrationDate = DateOnly.FromDateTime(DateTime.Now),
-                   Balance = 0,
-               } ,
-            new Person()
-            {
-                Id = 22,
-                Name = "George",
-                Category = PersonCategory.INTERNET,
-                IsAdmin = false,
-                RegistrationDate = DateOnly.FromDateTime(DateTime.Now),
-                Balance = 0,
-            }
-            ];
+  
+        private readonly RelationalDbContext _db;
 
+        public PersonService(RelationalDbContext db)
+        {
+            _db = db;
+        }
 
         public Person CreatePerson(Person person)
         {
-           _people.Add(person);
+            _db.Persons.Add(person);
+            _db.SaveChanges();
             return person;
         }
 
         public bool DeletePerson(int personId)
         {
-            Person? person = ReadPerson(personId);
-            if (person == null) { return false; }
-            _people.Remove(person);
-            return true;
+            throw new NotImplementedException();
         }
 
         public Person? ReadPerson(int personId)
         {
-            return  _people.Where(person => person.Id == personId).FirstOrDefault();
-             
-            
+            return _db
+                .Persons
+                .Where(person => person.Id == personId).FirstOrDefault();
         }
 
         public IEnumerable<Person> ReadPerson()
         {
-            return _people;
+             return _db.Persons.ToList();
         }
 
         public bool UpdatePerson(int personId, PersonCategory newCategory)
@@ -59,6 +44,7 @@ namespace RelationalApp.Services
             Person? person = ReadPerson(personId);
             if (person == null) { return false; }
             person.Category = newCategory;
+            _db.SaveChanges();
             return true;
 
         }

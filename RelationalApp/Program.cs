@@ -1,7 +1,27 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using RelationalApp.Data;
+using RelationalApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddDbContext<RelationalDbContext>
+    (options => options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IPersoneService, PersonService>();
+
+
+using (var dbContext = new RelationalDbContext())
+{
+    // Apply pending migrations and create/update the database
+    dbContext.Database.Migrate();
+}
+
 
 var app = builder.Build();
 
