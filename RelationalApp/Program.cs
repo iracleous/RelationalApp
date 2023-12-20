@@ -10,8 +10,8 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddDbContext<RelationalDbContext>
-    (options => options.UseSqlite(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+    (options => options.UseSqlServer(
+        builder.Configuration.GetConnectionString("MSConnectionString")));
 
 builder.Services.AddScoped<IPersoneService, PersonService>();
 
